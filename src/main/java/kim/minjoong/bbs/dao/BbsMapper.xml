@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kim.minjoong.bbs.dao.BbsMapper">
+
+    <resultMap id="bbsMap" type="kim.minjoong.bbs.dao.BbsVo">
+        <id     property="idx"    column="idx" />
+        <result property="subject"       column="subject" />
+        <result property="content"       column="content" />
+        <result property="reg_datetime"       column="reg_datetime" />
+        <result property="mod_datetime"       column="mod_datetime" />
+        <result property="user_id"       column="user_id" />
+    </resultMap>
+
+    <select id="select" resultMap="bbsMap">
+        SELECT * FROM bbs ORDER BY idx DESC
+    </select>
+    
+    <select id="selectSearch" parameterType="String" resultMap="bbsMap">
+        SELECT * FROM bbs WHERE subject LIKE #{search} ORDER BY idx DESC
+    </select>
+    
+    <select id="selectSubjectList" resultType="String">
+    	SELECT DISTINCT subject FROM bbs
+    </select>
+
+    <select id="selectOne" resultMap="bbsMap">
+        SELECT * FROM bbs WHERE idx = #{idx}
+    </select>
+
+    <insert id="insert">
+         INSERT INTO bbs ( subject, content, reg_datetime, mod_datetime, user_id ) VALUES (
+                #{subject}
+              , #{content}
+              , (SELECT now())
+              , (SELECT now())
+              , #{user_id}
+         )
+    </insert>
+
+    <update id="update">
+         UPDATE bbs SET
+              subject = #{subject},
+              content = #{content},
+              mod_datetime = (SELECT now())
+         WHERE idx = #{idx} LIMIT 1
+    </update>
+
+    <delete id="delete">
+         DELETE FROM bbs WHERE idx = #{idx}
+    </delete>
+
+</mapper>

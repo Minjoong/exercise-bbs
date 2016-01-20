@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kim.minjoong.bbs.dao.UserMapper">
+
+    <resultMap id="userMap" type="kim.minjoong.bbs.dao.UserVo">
+        <id     property="idx"    column="idx" />
+        <result property="id"       column="id" />
+        <result property="password"       column="password" />
+        <result property="reg_datetime"       column="reg_datetime" />
+    </resultMap>
+
+    <select id="selectById" resultMap="userMap">
+        SELECT password FROM user WHERE id = #{id}
+    </select>
+
+    <select id="selectOne" resultMap="userMap">
+        SELECT * FROM user WHERE idx = #{idx}
+    </select>
+
+    <insert id="insert">
+         INSERT INTO user ( id, password, reg_datetime ) VALUES (
+                #{id}
+              , #{password}
+              , (SELECT now())
+         )
+    </insert>
+
+    <update id="update">
+         UPDATE bbs SET
+              subject = #{subject},
+              content = #{content},
+              mod_datetime = (SELECT now())
+         WHERE idx = #{idx} LIMIT 1
+    </update>
+
+    <delete id="delete">
+         DELETE FROM bbs WHERE idx = #{idx}
+    </delete>
+
+</mapper>
